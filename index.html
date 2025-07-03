@@ -9,19 +9,19 @@
 <body>
   <div class="container">
     <h1>User Subject Assignment Dashboard</h1>
-
+    
     <div class="filter">
       <label for="userSelect">Select a User:</label>
       <select id="userSelect">
         <option value="">-- Choose a user --</option>
       </select>
     </div>
-
+    
     <div id="subjectList">
       <h2>Assigned Subjects</h2>
       <ul id="subjectsUl"></ul>
     </div>
-
+    
     <div id="updateSection">
       <h2>Update Subjects</h2>
       <p>Type each subject on a new line using this format:<br><code>subject:Science, level:Beginner</code></p>
@@ -37,35 +37,48 @@
     const updateBtn = document.getElementById("updateBtn");
 
     async function fetchUsers() {
-      const res = await fetch(`${BASE_URL}/api/users`);
-      const users = await res.json();
-      users.forEach(user => {
-        const option = document.createElement("option");
-        option.value = user.id;
-        option.textContent = `${user.name} (ID: ${user.id})`;
-        userSelect.appendChild(option);
-      });
+      try {
+        const res = await fetch(`${BASE_URL}/api/users`);
+        const users = await res.json();
+        users.forEach(user => {
+          const option = document.createElement("option");
+          option.value = user.id;
+          option.textContent = `${user.name} (ID: ${user.id})`;
+          userSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        alert("Error loading users. Please check your connection.");
+      }
     }
 
     async function fetchSubjects(userId) {
-      const res = await fetch(`${BASE_URL}/api/users/${userId}/subjects`);
-      const subjects = await res.json();
-      subjectsUl.innerHTML = '';
-      if (subjects.length === 0) {
-        subjectsUl.innerHTML = "<li>No subjects assigned.</li>";
-        return;
+      try {
+        subjectsUl.innerHTML = '<li class="loading">Loading subjects...</li>';
+        const res = await fetch(`${BASE_URL}/api/users/${userId}/subjects`);
+        const subjects = await res.json();
+        
+        subjectsUl.innerHTML = '';
+        if (subjects.length === 0) {
+          subjectsUl.innerHTML = "<li>No subjects assigned.</li>";
+          return;
+        }
+        
+        subjects.forEach(s => {
+          const li = document.createElement("li");
+          li.textContent = `${s.subject} - ${s.level}`;
+          subjectsUl.appendChild(li);
+        });
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+        subjectsUl.innerHTML = "<li>Error loading subjects.</li>";
       }
-      subjects.forEach(s => {
-        const li = document.createElement("li");
-        li.textContent = `${s.subject} - ${s.level}`;
-        subjectsUl.appendChild(li);
-      });
     }
 
     function parseInputText(text) {
       const lines = text.trim().split("\n");
       const parsed = [];
-
+      
       for (let line of lines) {
         const parts = line.split(",");
         const subjectObj = {};
@@ -87,34 +100,50 @@
       if (userId) fetchSubjects(userId);
     });
 
-   updateBtn.addEventListener("click", async () => {
-  const userId = userSelect.value;
-  const inputText = document.getElementById("subjectInput").value;
+    updateBtn.addEventListener("click", async () => {
+      const userId = userSelect.value;
+      const inputText = document.getElementById("subjectInput").value;
+      
+      if (!userId) {
+        alert("Please select a user.");
+        return;
+      }
+      
+      const parsedSubjects = parseInputText(inputText);
+      if (parsedSubjects.length === 0) {
+        alert("Invalid subject input. Please follow the format.");
+        return;
+      }
+      
+      try {
+        updateBtn.textContent = "Updating...";
+        updateBtn.disabled = true;
+        
+        const res = await fetch(`${BASE_URL}/api/users/${userId}/subjects`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(parsedSubjects)
+        });
+        
+        const result = await res.json();
+        
+        if (res.ok) {
+          alert("Subjects updated successfully.");
+          document.getElementById("subjectInput").value = "";
+          fetchSubjects(userId);
+        } else {
+          alert("Error: " + result.message);
+        }
+      } catch (error) {
+        console.error("Error updating subjects:", error);
+        alert("Network error: " + error.message);
+      } finally {
+        updateBtn.textContent = "Update Subjects";
+        updateBtn.disabled = false;
+      }
+    });
 
-  if (!userId) {
-    alert("Please select a user.");
-    return;
-  }
-
-  const parsedSubjects = parseInputText(inputText);
-  if (parsedSubjects.length === 0) {
-    alert("Invalid subject input. Please follow the format.");
-    return;
-  }
-
-  const res = await fetch(`${BASE_URL}/api/users/${userId}/subjects`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(parsedSubjects)
-  });
-
-  const result = await res.json();
-  alert("Subjects updated successfully.");
-  document.getElementById("subjectInput").value = "";  // ← clear input
-  fetchSubjects(userId);
-});
-
-
+    // Initialize the app
     fetchUsers();
   </script>
 </body>
