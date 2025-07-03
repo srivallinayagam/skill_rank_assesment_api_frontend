@@ -1,25 +1,22 @@
-/* Base Reset & Layout */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #667eea, #764ba2);
   margin: 0;
   padding: 40px 20px;
   min-height: 100vh;
-  line-height: 1.7;
+  line-height: 1.6;
   color: #2d3748;
 }
 
 .container {
-  max-width: 960px;
+  max-width: 900px;
   margin: auto;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  padding: 48px;
-  box-shadow: 
-    0 24px 48px rgba(0, 0, 0, 0.12),
-    0 12px 24px rgba(0, 0, 0, 0.08);
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -30,79 +27,81 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 5px;
+  height: 4px;
   background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-  border-radius: 24px 24px 0 0;
-}
-
-/* Headings */
-h1, h2 {
-  font-weight: 700;
-  margin-bottom: 24px;
+  border-radius: 20px 20px 0 0;
 }
 
 h1 {
-  font-size: 2.75rem;
+  font-size: 2.5rem;
   background: linear-gradient(135deg, #667eea, #764ba2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }
 
 h2 {
-  font-size: 1.75rem;
-  margin-top: 40px;
+  font-size: 1.8rem;
   color: #333;
+  margin-top: 32px;
 }
 
-/* Form Elements */
 label {
-  display: block;
   font-weight: 600;
   color: #4a5568;
-  margin-bottom: 10px;
-  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
 }
 
-select, textarea, button {
+select, textarea {
   width: 100%;
   padding: 14px 18px;
-  margin-bottom: 28px;
+  margin-bottom: 14px;
   font-size: 1rem;
   border-radius: 12px;
   border: 1.5px solid #d1d9e6;
-  background-color: #fff;
   font-family: inherit;
-  transition: all 0.25s ease;
+}
+#subjectInput {
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1.5px solid #d1d9e6;
+  font-family: inherit;
   box-sizing: border-box;
 }
 
-select:focus, textarea:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
-  transform: translateY(-1px);
-}
-
 textarea {
-  min-height: 140px;
+  min-height: 120px;
   resize: vertical;
 }
 
 button {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
+  color: white;
   border: none;
+  cursor: pointer;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  cursor: pointer;
-  position: relative;
+  padding: 14px 20px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  padding: 16px 20px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1.5px solid #d1d9e6;
+  font-family: inherit;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
 button:disabled {
@@ -110,60 +109,52 @@ button:disabled {
   cursor: not-allowed;
 }
 
-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-  transition: left 0.5s;
-}
-
-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.35);
-}
-
-button:hover::before {
-  left: 100%;
-}
-
-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-/* Lists */
 ul {
   list-style: none;
   padding-left: 0;
 }
 
+/* 💡 Improved layout for subject + delete button */
 ul li {
-  position: relative;
-  padding-left: 32px;
-  margin-bottom: 14px;
-  color: #4a5568;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9f9fc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  color: #2d3748;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-ul li::before {
-  content: '▸';
-  position: absolute;
-  left: 0;
-  color: #667eea;
-  font-weight: bold;
-  font-size: 1.2rem;
+ul li span {
+  flex-grow: 1;
+  margin-right: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-ul li.loading {
-  color: #667eea;
-  font-style: italic;
+/* ❌ Button style */
+.delete-btn {
+  background: transparent;
+  border: 1px solid #e53e3e;
+  color: #e53e3e;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s ease, transform 0.1s;
+  min-width: 30px;
+  text-align: center;
 }
 
-ul li.loading::before {
-  content: '⟳';
-  animation: spin 1s linear infinite;
+.delete-btn:hover {
+  background: rgba(229, 62, 62, 0.1);
+  transform: scale(1.05);
 }
 
 @keyframes spin {
@@ -171,64 +162,32 @@ ul li.loading::before {
   to { transform: rotate(360deg); }
 }
 
-/* Miscellaneous */
-p {
-  color: #4a5568;
-  margin-bottom: 20px;
-  font-size: 1rem;
-}
-
 code {
   background: #f7fafc;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-family: 'Monaco', 'Consolas', monospace;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', monospace;
   color: #764ba2;
   border: 1px solid #e2e8f0;
 }
 
-.filter {
-  margin-bottom: 36px;
-}
-
-#subjectList {
-  margin-bottom: 36px;
-}
-
 #updateSection {
-  background: #f9fafc;
-  padding: 28px;
-  border-radius: 18px;
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 16px;
   border: 1px solid #e2e8f0;
 }
-
-/* Accessibility & Focus */
-*:focus {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
+#updateBtn{
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1.5px solid #d1d9e6;
+  font-family: inherit;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-/* Subtle Entry Animations */
-.container > * {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive */
+  
 @media (max-width: 768px) {
   body {
     padding: 20px 12px;
@@ -239,14 +198,10 @@ html {
   }
 
   h1 {
-    font-size: 2.25rem;
+    font-size: 2.2rem;
   }
 
   h2 {
     font-size: 1.5rem;
-  }
-
-  select, textarea, button {
-    padding: 14px 16px;
   }
 }
